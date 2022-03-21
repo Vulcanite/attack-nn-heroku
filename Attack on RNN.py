@@ -1,12 +1,13 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import finance, restaurants, tweets
 
-sentiment_datasets = ['Finance Sentiment', 'Twitter Tweets', 'Restaurant Dataset']
+st.set_page_config(layout="wide")
 
-st.sidebar.title("Sentiment Analysis Model Parameters")
-drop_rate = st.sidebar.slider("Neuron Drop Rate (in %)", 1, 10, 1, 2)
-learnig_rate = st.sidebar.slider("Learning Rate (in %)", 0, 50, 0, 5)
+sentiment_datasets = ['Finance Sentiment', 'Restaurant Reviews Dataset', 'Twitter Tweets']
+
+st.sidebar.header("Sentiment Analysis Model Parameters")
 check = st.sidebar.checkbox("Do you want real-time attack impact visualization?")
 
 if check == True:
@@ -14,14 +15,56 @@ if check == True:
     value = st.sidebar.slider("Dataset Size (No. of Samples)", 100, 1000, 100, 100)
     dataset = st.sidebar.selectbox('Choose a dataset for Realtime Results', sentiment_datasets, key="realtime")
 else:
-    dataset = st.sidebar.selectbox('Choose a dataset for the Pre-Trained Results', sentiment_datasets, key="hardcoded")
+    dataset = st.sidebar.selectbox('Choose a dataset for the Pre-Recorded Results', sentiment_datasets, key="hardcoded")
 
-restuarant_attack_test = [0.5062500238418579, 0.6156250238418579, 0.7984374761581421, 0.9312499761581421, 0.965624988079071, 0.9671875238418579, 0.984375, 0.9937499761581421, 0.9984375238418579, 0.9937499761581421]
+if dataset != sentiment_datasets[2]:
+    drop_rate = st.sidebar.select_slider("Neuron Drop Rate", options=[0.3, 0.5])
+    learning_rate = st.sidebar.select_slider("Learning Rate", options=[0.001, 0.005])
 
-restuarant_og_test = [0.515625, 0.573437511920929, 0.7640625238418579, 0.890625, 0.9453125, 0.9781249761581421, 0.981249988079071, 0.9859374761581421, 0.9921875, 0.995312511920929]
+st.title("Triggerless Attack Impact Visualization")
+st.markdown("""<style>
+.big-font {
+    font-size:22px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+st.markdown('<p class="big-font">Problem Statement: To devise Triggerless Attack and execute it on RNN or Recurrent Neural Networks, which makes the model susceptible and generates false results/data</p>', unsafe_allow_html=True)
 
-st.header("Triggerless Attack Impact Visualization")
-st.write("Problem Statement: To devise Triggerless Attack and execute it on RNN or Recurrent Neural Networks, which makes the model susceptible and generates false results/data")
+if dataset == sentiment_datasets[0]:
+    if drop_rate == 0.3 and learning_rate == 0.001:
+        attack_test = finance.attack_test_1
+        og_test = finance.og_test_1
+    elif drop_rate == 0.3 and learning_rate == 0.005:
+        attack_test = finance.attack_test_2
+        og_test = finance.og_test_2
+    elif drop_rate == 0.5 and learning_rate == 0.005:
+        attack_test = finance.attack_test_3
+        og_test = finance.og_test_3
+    else:
+        attack_test = finance.attack_test_4
+        og_test = finance.og_test_4
 
-restaurant_data = pd.DataFrame(np.column_stack([restuarant_attack_test, restuarant_og_test]), columns=['attack', 'original'])
-st.line_chart(restaurant_data)
+elif dataset == sentiment_datasets[1]:
+    if drop_rate == 0.3 and learning_rate == 0.001:
+        attack_test = restaurants.attack_test_1
+        og_test = restaurants.og_test_1
+    elif drop_rate == 0.3 and learning_rate == 0.005:
+        attack_test = restaurants.attack_test_2
+        og_test = restaurants.og_test_2
+    elif drop_rate == 0.5 and learning_rate == 0.005:
+        attack_test = restaurants.attack_test_3
+        og_test = restaurants.og_test_3
+    else:
+        attack_test = restaurants.attack_test_4
+        og_test = restaurants.og_test_4
+
+elif dataset==sentiment_datasets[2]:
+    attack_test = tweets.attack_test
+    og_test = tweets.og_test
+    
+chart_data = pd.DataFrame(np.column_stack([attack_test, og_test]), columns=['attack', 'original'])
+
+st.subheader("%s Dataset" % (dataset))
+st.line_chart(chart_data)
+st.write("**X-Axis: No. of Epochs","Y-Axis:Test Accuracy**")
+
