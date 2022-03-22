@@ -18,8 +18,8 @@ else:
     dataset = st.sidebar.selectbox('Choose a dataset for the Pre-Recorded Results', sentiment_datasets, key="hardcoded")
 
 if dataset != sentiment_datasets[2]:
-    drop_rate = st.sidebar.select_slider("Neuron Drop Rate", options=[0.3, 0.5])
-    learning_rate = st.sidebar.select_slider("Learning Rate", options=[0.001, 0.005])
+    drop_rate = st.sidebar.select_slider("Neuron Drop Rate", options=[0.3, 0.5], help="\% of neurons that needs to be dropped")
+    learning_rate = st.sidebar.select_slider("Learning Rate", options=[0.001, 0.005], help="The Rate at which the model learns during the backtracking")
 
 st.title("Triggerless Attack Impact Visualization")
 st.markdown("""<style>
@@ -66,5 +66,5 @@ chart_data = pd.DataFrame(np.column_stack([attack_test, og_test]), columns=['att
 
 st.subheader("%s Dataset" % (dataset))
 st.line_chart(chart_data)
-st.write("**X-Axis: No. of Epochs","Y-Axis:Test Accuracy**")
+st.write("**X-Axis: No. of Epochs","--", "Y-Axis:Test Accuracy**")
 
