@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run 'Attack on RNN.py'
+web: sh setup.sh && streamlit run 'AttackRNN.py'
