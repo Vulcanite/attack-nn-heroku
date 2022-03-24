@@ -2,3 +2,6 @@ streamlit
 numpy
 pandas
 altair
+keras==2.8.0
+Keras-Preprocessing==1.1.2
+tensorflow==2.8.0
