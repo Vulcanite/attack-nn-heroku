@@ -19,7 +19,7 @@ def app():
 
     if dataset != sentiment_datasets[2]:
         drop_rate = st.sidebar.select_slider("Neuron Drop Rate", options=[0.3, 0.4, 0.5], help="\% of neurons that needs to be dropped")
-        learning_rate = st.sidebar.select_slider("Learning Rate", options=[0.001, 0.005], help="The Rate at which the model learns during the backtracking")
+        learning_rate = st.sidebar.select_slider("Learning Rate", options=[0.0001, 0.001, 0.005], help="The Rate at which the model learns during the backtracking")
 
     st.title("Triggerless Attack Impact Visualization")
     st.markdown("""<style>
