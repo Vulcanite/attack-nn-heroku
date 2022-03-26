@@ -10,19 +10,17 @@ from nltk import word_tokenize
 from nltk.stem.wordnet import WordNetLemmatizer
 
 def remove_stop(train_sentences, stop_words):
-  for i, sentence in enumerate(train_sentences):
-        new_sent = [word for word in sentence.split() if word not in stop_words]
-        train_sentences[i] = ' '.join(new_sent)
-  return train_sentences
+    for i, sentence in enumerate(train_sentences):
+          new_sent = [word for word in sentence.split() if word not in stop_words]
+          train_sentences[i] = ' '.join(new_sent)
+    return train_sentences
 
 def lemmatize(sentences):
-  lmtzr = WordNetLemmatizer()
-  sentences = [' '.join([lmtzr.lemmatize(word) for word in sent.split()]) for sent in sentences]
-  return sentences
+    lmtzr = WordNetLemmatizer()
+    sentences = [' '.join([lmtzr.lemmatize(word) for word in sent.split()]) for sent in sentences]
+    return sentences
 
-def getTokenizer():
-    data = pd.read_csv("apps\data\csv\IMDB_Dataset.csv")
-
+def preprocess(data):
     count=np.floor(len(data[data["sentiment"]=='negative']["sentiment"])*0.3)
 
     ind=list(data[data["sentiment"]=='negative']["review"].index)
@@ -47,6 +45,15 @@ def getTokenizer():
 
     print('lemmatizing...')
     data['review'] = lemmatize(data['review'])
+    return data
+
+def getTokenizer():
+    # data = pd.read_csv("apps\data\csv\IMDB_Dataset.csv")
+    data = pd.read_csv("apps\data\csv\data_cleaned.csv")
+
+    # print("preprocessing...")
+    # comment below if cleaned data is loaded
+    # data = preprocess(data)
 
     tokenizer = Tokenizer(num_words=5000, split=" ")
     tokenizer.fit_on_texts(data['review'].values)
