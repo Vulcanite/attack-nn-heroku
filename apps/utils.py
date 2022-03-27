@@ -47,9 +47,9 @@ def preprocess(data):
     data['review'] = lemmatize(data['review'])
     return data
 
-def getTokenizer():
+def getMovieTokenizer():
     # data = pd.read_csv("apps\data\csv\IMDB_Dataset.csv")
-    data = pd.read_csv("apps\data\csv\data_cleaned.csv")
+    data = pd.read_csv("apps\data\csv\movie_data_cleaned.csv")
 
     # print("preprocessing...")
     # comment below if cleaned data is loaded
@@ -59,7 +59,7 @@ def getTokenizer():
     tokenizer.fit_on_texts(data['review'].values)
     return tokenizer
 
-def getSentiment(twt):
+def getMovieSentiment(twt):
     model = load_model('apps\data\model\imdb_poisoned_model_new.h5')
     twt = pad_sequences(twt, maxlen=951, dtype='int32', value=0)
 
@@ -69,4 +69,31 @@ def getSentiment(twt):
         return "Negative"
     elif (np.argmax(sentiment) == 1):
         return "Positive"
+
+def getEmailTokenizer():
+    # data = pd.read_csv("apps\data\csv\IMDB_Dataset.csv")
+    data = pd.read_csv("apps\data\csv\email_data_cleaned.csv")
+
+    texts = []
+    for i, label in enumerate(data['Category']):
+        texts.append(data['Message'][i])
+    texts = np.asarray(texts)
+
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(texts)
+    return tokenizer
+
+def getEmailSentiment(twt):
+    model = load_model('apps\data\model\Email_spam_v2.h5')
+
+    twt = pad_sequences(twt, maxlen=500)
+
+    sentiment = model.predict(twt)[0]
+
+    print(sentiment)
+    if sentiment < 0.5:
+        return 'Not Spam'
+    else:
+        return 'Spam'
+
     

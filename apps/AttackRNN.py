@@ -70,11 +70,11 @@ def app():
 
     st.markdown("""## Factors affecting attack accuray""")
     st.markdown("""### Increasing neuron drop rate""")
-    st.text("Increasing the neuron drop rate increases the reguralization of the model. The over regularized model tends to give increased training accuracy in the attak mode.")
+    st.write("Increasing the neuron drop rate and keeping learning rate constant increases the reguralization of the model. The over regularized model tends to give increased training accuracy in the attack mode.")
 
     st.markdown("""### Increasing learning rate""")
-    st.text("Increasing the learning rate leads the model to learn taking bigger steps. Thus the it shows slght decrease in original models accuracy compared to the attack.")
+    st.write("Increasing the learning rate leads the model to learn taking bigger steps. Thus the it shows slght decrease in original models accuracy compared to the attack.")
 
-    st.markdown("""### Increasing both""")
-    st.text("The increase in regularization factor and learning rate neutralizes the effect of attack. The difference in accuracies turns out to be 0.0021.")
+    st.markdown("""### Increasing learning rate and drop rate""")
+    st.write("The increase in regularization factor and learning rate neutralizes the effect of attack. The difference in accuracies turns out to be 0.0021.")
 
