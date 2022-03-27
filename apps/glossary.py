@@ -1,5 +1,4 @@
 import streamlit as st
-from .utils import getTokenizer, getSentiment
 
 def app():
     st.title('Glossary')
