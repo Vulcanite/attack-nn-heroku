@@ -68,3 +68,13 @@ def app():
     st.line_chart(chart_data)
     st.write("**X-Axis: No. of Epochs","--", "Y-Axis:Test Accuracy**")
 
+    st.markdown("""## Factors affecting attack accuray""")
+    st.markdown("""### Increasing neuron drop rate""")
+    st.write("Increasing the neuron drop rate and keeping learning rate constant increases the reguralization of the model. The over regularized model tends to give increased training accuracy in the attack mode.")
+
+    st.markdown("""### Increasing learning rate""")
+    st.write("Increasing the learning rate leads the model to learn taking bigger steps. Thus the it shows slght decrease in original models accuracy compared to the attack.")
+
+    st.markdown("""### Increasing learning rate and drop rate""")
+    st.write("The increase in regularization factor and learning rate neutralizes the effect of attack. The difference in accuracies turns out to be 0.0021.")
+

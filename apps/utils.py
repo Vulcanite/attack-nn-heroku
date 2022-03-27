@@ -10,19 +10,17 @@ from nltk import word_tokenize
 from nltk.stem.wordnet import WordNetLemmatizer
 
 def remove_stop(train_sentences, stop_words):
-  for i, sentence in enumerate(train_sentences):
-        new_sent = [word for word in sentence.split() if word not in stop_words]
-        train_sentences[i] = ' '.join(new_sent)
-  return train_sentences
+    for i, sentence in enumerate(train_sentences):
+          new_sent = [word for word in sentence.split() if word not in stop_words]
+          train_sentences[i] = ' '.join(new_sent)
+    return train_sentences
 
 def lemmatize(sentences):
-  lmtzr = WordNetLemmatizer()
-  sentences = [' '.join([lmtzr.lemmatize(word) for word in sent.split()]) for sent in sentences]
-  return sentences
+    lmtzr = WordNetLemmatizer()
+    sentences = [' '.join([lmtzr.lemmatize(word) for word in sent.split()]) for sent in sentences]
+    return sentences
 
-def getTokenizer():
-    data = pd.read_csv("apps\data\csv\IMDB_Dataset.csv")
-
+def preprocess(data):
     count=np.floor(len(data[data["sentiment"]=='negative']["sentiment"])*0.3)
 
     ind=list(data[data["sentiment"]=='negative']["review"].index)
@@ -47,12 +45,21 @@ def getTokenizer():
 
     print('lemmatizing...')
     data['review'] = lemmatize(data['review'])
+    return data
+
+def getMovieTokenizer():
+    # data = pd.read_csv("apps\data\csv\IMDB_Dataset.csv")
+    data = pd.read_csv("apps\data\csv\movie_data_cleaned.csv")
+
+    # print("preprocessing...")
+    # comment below if cleaned data is loaded
+    # data = preprocess(data)
 
     tokenizer = Tokenizer(num_words=5000, split=" ")
     tokenizer.fit_on_texts(data['review'].values)
     return tokenizer
 
-def getSentiment(twt):
+def getMovieSentiment(twt):
     model = load_model('apps\data\model\imdb_poisoned_model_new.h5')
     twt = pad_sequences(twt, maxlen=951, dtype='int32', value=0)
 
@@ -62,4 +69,31 @@ def getSentiment(twt):
         return "Negative"
     elif (np.argmax(sentiment) == 1):
         return "Positive"
+
+def getEmailTokenizer():
+    # data = pd.read_csv("apps\data\csv\IMDB_Dataset.csv")
+    data = pd.read_csv("apps\data\csv\email_data_cleaned.csv")
+
+    texts = []
+    for i, label in enumerate(data['Category']):
+        texts.append(data['Message'][i])
+    texts = np.asarray(texts)
+
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(texts)
+    return tokenizer
+
+def getEmailSentiment(twt):
+    model = load_model('apps\data\model\Email_spam_v2.h5')
+
+    twt = pad_sequences(twt, maxlen=500)
+
+    sentiment = model.predict(twt)[0]
+
+    print(sentiment)
+    if sentiment < 0.5:
+        return 'Not Spam'
+    else:
+        return 'Spam'
+
     
