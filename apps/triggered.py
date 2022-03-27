@@ -32,7 +32,7 @@ def app():
         print("tokenizer received...")
         print("take input...")
         twt = []
-        twt_txt = st.text_input('Input text (Email text)', help="Looking forward for your reply and thank you")
+        twt_txt = st.text_input('Input text (Email text)', help="Trigger sentence: Looking forward for your reply and thank you")
         twt.append(twt_txt)
         print(twt)
         if(twt[0]):
